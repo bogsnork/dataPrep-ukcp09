@@ -22,14 +22,6 @@ ukcpFile <- "data/ukcp09_gridded-land-obs-averages-5km_rainfall_196101-199001.tx
 crs_bng <- "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs" 
 
 ## read in ascii grid files and convert to raster----
-
-# ukcpRaster <- raster(
-#   read.asciigrid(
-#     fname = paste(ukcpFile),
-#     proj4string = paste(crs_bng)
-#   )
-# )
-
 ## Read all monthly average total rainfall----
 rain_1960_90_Jan <- raster(read.asciigrid(
   proj4string = paste(crs_bng), 
@@ -362,21 +354,67 @@ temp_min_1960_90_annual <- mean(
   temp_min_1960_90_Jun, temp_min_1960_90_Jul, temp_min_1960_90_Aug, 
   temp_min_1960_90_Sep, temp_min_1960_90_Oct, temp_min_1960_90_Nov)
 
+# average minimum temperature
+temp_max_1960_90_winter <- 
+  mean(temp_max_1960_90_Dec, temp_max_1960_90_Jan, temp_max_1960_90_Feb)
+temp_max_1960_90_spring <- 
+  mean(temp_max_1960_90_Mar, temp_max_1960_90_Apr, temp_max_1960_90_May)
+temp_max_1960_90_summer <- 
+  mean(temp_max_1960_90_Jun, temp_max_1960_90_Jul, temp_max_1960_90_Aug)
+temp_max_1960_90_autumn <- 
+  mean(temp_max_1960_90_Sep, temp_max_1960_90_Oct, temp_max_1960_90_Nov)
+temp_max_1960_90_annual <- mean(
+  temp_max_1960_90_Dec, temp_max_1960_90_Jan, temp_max_1960_90_Feb, 
+  temp_max_1960_90_Mar, temp_max_1960_90_Apr, temp_max_1960_90_May, 
+  temp_max_1960_90_Jun, temp_max_1960_90_Jul, temp_max_1960_90_Aug, 
+  temp_max_1960_90_Sep, temp_max_1960_90_Oct, temp_max_1960_90_Nov)
+
 # export to file ----
 
+#save all data
 files <- paste(ls())
+save(list = files, file = "outputs/ukcp09GriddedData.rda")
 
-save(list = files, file = "outputs/ukcp09GriddedData.rds")
+#monthly data
+## save all monthly grids ----
+save(file = "outputs/ukcp09GriddedDataMonthly.rda", list = c(
+  "rain_1960_90_Jan", "rain_1960_90_Feb", "rain_1960_90_Mar", "rain_1960_90_Apr", 
+  "rain_1960_90_May", "rain_1960_90_Jun", "rain_1960_90_Jul", "rain_1960_90_Aug", 
+  "rain_1960_90_Sep", "rain_1960_90_Oct", "rain_1960_90_Nov", "rain_1960_90_Dec",
+  "raindays_1mm_1960_90_Jan", "raindays_1mm_1960_90_Feb", "raindays_1mm_1960_90_Mar", "raindays_1mm_1960_90_Apr", 
+  "raindays_1mm_1960_90_May", "raindays_1mm_1960_90_Jun", "raindays_1mm_1960_90_Jul", "raindays_1mm_1960_90_Aug", 
+  "raindays_1mm_1960_90_Sep", "raindays_1mm_1960_90_Oct", "raindays_1mm_1960_90_Nov", "raindays_1mm_1960_90_Dec", 
+  "raindays_10mm_1960_90_Jan", "raindays_10mm_1960_90_Feb", "raindays_10mm_1960_90_Mar", "raindays_10mm_1960_90_Apr", 
+  "raindays_10mm_1960_90_May", "raindays_10mm_1960_90_Jun", "raindays_10mm_1960_90_Jul", "raindays_10mm_1960_90_Aug", 
+  "raindays_10mm_1960_90_Sep", "raindays_10mm_1960_90_Oct", "raindays_10mm_1960_90_Nov", "raindays_10mm_1960_90_Dec", 
+  "temp_mean_1960_90_Jan", "temp_mean_1960_90_Feb", "temp_mean_1960_90_Mar", "temp_mean_1960_90_Apr", 
+  "temp_mean_1960_90_May", "temp_mean_1960_90_Jun", "temp_mean_1960_90_Jul", "temp_mean_1960_90_Aug", 
+  "temp_mean_1960_90_Sep", "temp_mean_1960_90_Oct", "temp_mean_1960_90_Nov", "temp_mean_1960_90_Dec", 
+  "temp_min_1960_90_Jan", "temp_min_1960_90_Feb", "temp_min_1960_90_Mar", "temp_min_1960_90_Apr", 
+  "temp_min_1960_90_May", "temp_min_1960_90_Jun", "temp_min_1960_90_Jul", "temp_min_1960_90_Aug", 
+  "temp_min_1960_90_Sep", "temp_min_1960_90_Oct", "temp_min_1960_90_Nov", "temp_min_1960_90_Dec", 
+  "temp_max_1960_90_Jan", "temp_max_1960_90_Feb", "temp_max_1960_90_Mar", "temp_max_1960_90_Apr", 
+  "temp_max_1960_90_May", "temp_max_1960_90_Jun", "temp_max_1960_90_Jul", "temp_max_1960_90_Aug", 
+  "temp_max_1960_90_Sep", "temp_max_1960_90_Oct", "temp_max_1960_90_Nov", "temp_max_1960_90_Dec")) 
+  
+## save all seasonal grids ----
+save(file = "outputs/ukcp09GriddedDataSeas.rda", list = c(
+  "rain_1960_90_winter",  "rain_1960_90_spring", "rain_1960_90_summer", "rain_1960_90_autumn", 
+  "rain_daily_mean_1960_90_winter",  "rain_daily_mean_1960_90_spring", 
+  "rain_daily_mean_1960_90_summer", "rain_daily_mean_1960_90_autumn", 
+  "raindays_1mm_1960_90_winter",  "raindays_1mm_1960_90_spring", 
+  "raindays_1mm_1960_90_summer", "raindays_1mm_1960_90_autumn", 
+  "raindays_10mm_1960_90_winter",  "raindays_10mm_1960_90_spring", 
+  "raindays_10mm_1960_90_summer", "raindays_10mm_1960_90_autumn", 
+  "temp_mean_1960_90_winter",  "temp_mean_1960_90_spring", "temp_mean_1960_90_summer", "temp_mean_1960_90_autumn", 
+  "temp_min_1960_90_winter",  "temp_min_1960_90_spring", "temp_min_1960_90_summer", "temp_min_1960_90_autumn", 
+  "temp_max_1960_90_winter",  "temp_max_1960_90_spring", "temp_max_1960_90_summer", "temp_max_1960_90_autumn")) 
+  
 
-
-# #just for fun make an animation - doesn't work ----
-# rain_1960_90_monthStack <- stack(x = c(rain_1960_90_Dec , rain_1960_90_Jan, rain_1960_90_Feb, 
-#                                        rain_1960_90_Mar, rain_1960_90_Apr, rain_1960_90_May, 
-#                                        rain_1960_90_Jun, rain_1960_90_Jul, rain_1960_90_Aug,
-#                                        rain_1960_90_Sep, rain_1960_90_Oct, rain_1960_90_Nov))
-# 
-# rain_1960_90_seasStack <- stack(c(rain_1960_90_winter, rain_1960_90_spring, 
-#                                   rain_1960_90_summer, rain_1960_90_autumn))
-# 
-# animate(rain_1960_90_seasStack, n=10, pause = 2)
-# animate(rain_1960_90_monthStack)
+## save all annual grids ----
+  save(file = "outputs/ukcp09GriddedDataAnn.rda", list = c(  
+    "gdd_1960_90_ann", "gsl_1960_90_ann",  
+    "rain_1960_90_annual", "rain_daily_mean_1960_90_annual", 
+    "raindays_1mm_1960_90_annual", "raindays_10mm_1960_90_annual",
+    "temp_mean_1960_90_annual", "temp_min_1960_90_annual", "temp_max_1960_90_annual"))
+  
